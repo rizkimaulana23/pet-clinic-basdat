@@ -8,6 +8,54 @@ import TableCell from '@/components/ui/table/TableCell.vue';
 import TableHead from '@/components/ui/table/TableHead.vue';
 import TableHeader from '@/components/ui/table/TableHeader.vue';
 import TableRow from '@/components/ui/table/TableRow.vue';
+import type { CreateVaccinationDto, UpdateVaccinationDto, VaccinationDto } from '@/services/vaccination.services';
+import { createVaccination, deleteVaccination, getAllVaccination, updateVaccination } from '@/services/vaccination.services';
+import { onMounted, ref } from 'vue';
+import { toast } from 'vue-sonner';
+
+const listVaccination = ref<VaccinationDto[]>();
+const fetchData = async () => {
+    const result = await getAllVaccination();
+    listVaccination.value = result;
+}
+
+onMounted(() => {
+    fetchData();
+})
+
+
+const handleCreateVaccination = async (data: CreateVaccinationDto) => {
+    try {
+        await createVaccination(data);
+        fetchData();
+    } catch (error: any) {
+        toast.error("Failed to Create Vaccination")
+    }
+}
+
+const handleUpdateVaccination = async (data: UpdateVaccinationDto) => {
+    try {
+        await updateVaccination(data);
+        toast.success("Succesfully updated Vaccination");
+        await fetchData();
+    } catch (error: any) {
+        toast.error("Failed to update Vaccination", {
+            description: error.message
+        })
+    }
+}
+
+const handleDeleteVaccination = async (idKunjungan: string) => {
+    try {
+        await deleteVaccination(idKunjungan);
+        fetchData();
+        toast.success("Successfully delete Vaccination")
+    } catch (error: any) {
+        toast.error("Failed to delete Vaccination", {
+            description: error.message
+        })
+    }
+}
 
 </script>
 
@@ -16,7 +64,7 @@ import TableRow from '@/components/ui/table/TableRow.vue';
         <h1 class="font-bold text-xl">List Vaccination</h1>
         <div class="space-y-2">
             <div class="flex justify-end">
-                <CreateVaccinationButton />
+                <CreateVaccinationButton @create="handleCreateVaccination"/>
             </div>
             <Table>
                 <TableHeader>
@@ -29,14 +77,14 @@ import TableRow from '@/components/ui/table/TableRow.vue';
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow>
-                        <TableCell class="text-center w-[10%]">1</TableCell>
-                        <TableCell class="text-center">asdfad</TableCell>
-                        <TableCell class="text-center">adsf</TableCell>
-                        <TableCell class="text-center">adf</TableCell>
+                    <TableRow v-for="(item, index) in listVaccination" :key="index">
+                        <TableCell class="text-center w-[10%]">{{ index + 1 }}</TableCell>
+                        <TableCell class="text-center">{{ item.idKunjungan }}</TableCell>
+                        <TableCell class="text-center">{{ item.tanggalKunjungan }}</TableCell>
+                        <TableCell class="text-center">{{ item.kodeVaksin }} - {{ item.namaVaksin }}</TableCell>
                         <TableCell class="text-center space-x-1">
-                            <UpdateVaccinationButton id-kunjungan="KJN001" id-vaksin="VAC001"></UpdateVaccinationButton>
-                            <DeleteVaccinationButton id-kunjungan="KJN001" id-vaksin="VAC001"></DeleteVaccinationButton>
+                            <UpdateVaccinationButton :id-kunjungan="item.idKunjungan" :id-vaksin="item.kodeVaksin" @update="handleUpdateVaccination"></UpdateVaccinationButton>
+                            <DeleteVaccinationButton :id-kunjungan="item.idKunjungan" :id-vaksin="item.kodeVaksin" @delete="handleDeleteVaccination"></DeleteVaccinationButton>
                         </TableCell>
                     </TableRow>
                 </TableBody>

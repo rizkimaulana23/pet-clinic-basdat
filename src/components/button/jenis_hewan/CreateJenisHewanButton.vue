@@ -64,11 +64,11 @@ const onSubmit = handleSubmit((values) => {
       <DialogHeader>
         <DialogTitle>Add New Animal Types</DialogTitle>
         <form @submit.prevent="onSubmit" class="w-full max-w-md space-y-4 mt-3">
-            <FormField v-slot="{ field }" name="namaJenis">
+            <FormField v-slot="{ componentField }" name="namaJenis">
                 <FormItem>
                     <FormLabel>Nama Jenis</FormLabel>
                     <FormControl>
-                        <Input type="text" v-bind="field"/>
+                        <Input type="text" v-bind="componentField"/>
                     </FormControl>
                     <FormMessage />
                 </FormItem>

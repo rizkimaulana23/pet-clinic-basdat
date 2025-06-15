@@ -12,11 +12,14 @@ import {
 } from '@/components/ui/alert-dialog'
 import Button from '../ui/button/Button.vue';
 
+const emits = defineEmits<{
+  'delete': [idKunjungan: string]
+}>();
+
 defineProps<{
     idKunjungan: string,
     idVaksin: string
 }>();
-
 
 </script>
 
@@ -34,7 +37,7 @@ defineProps<{
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel>Cancel</AlertDialogCancel>
-        <AlertDialogAction class="bg-red-500">Confirm Deletion</AlertDialogAction>
+        <AlertDialogAction class="bg-red-500" @click="() => { emits('delete', idKunjungan)}">Confirm Deletion</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>

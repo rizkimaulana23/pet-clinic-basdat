@@ -36,7 +36,7 @@ const formSchema = toTypedSchema(z.object({
 
 const { handleSubmit } = useForm({
     validationSchema: formSchema,
-}) 
+})
 
 const onSubmit = handleSubmit(async (values) => {
     try {
@@ -67,39 +67,39 @@ const handleOpenChange = (newValue: boolean) => {
         <DialogContent>
             <DialogHeader>
                 <DialogTitle>Update Password</DialogTitle>
-                <form @submit="onSubmit" class="w-full max-w-md space-y-6">
-                    <FormField v-slot="{ field, errorMessage }" name="passwordLama">
-                        <FormItem>
-                            <FormLabel class="flex gap-1">Password Lama<span class="text-red-500">*</span></FormLabel>
-                            <FormControl>
-                                <Input type="password" placeholder="Password Lama" v-bind="field" />
-                            </FormControl>
-                            <FormMessage>{{ errorMessage }}</FormMessage>
-                        </FormItem>
-                    </FormField>
-
-                    <FormField v-slot="{ field, errorMessage }" name="passwordBaru">
-                        <FormItem>
-                            <FormLabel class="flex gap-1">Password Baru<span class="text-red-500">*</span></FormLabel>
-                            <FormControl>
-                                <Input type="password" placeholder="Password Baru" v-bind="field" />
-                            </FormControl>
-                            <FormMessage>{{ errorMessage }}</FormMessage>
-                        </FormItem>
-                    </FormField>
-
-                    <FormField v-slot="{ field, errorMessage }" name="passwordBaruKonfirmasi">
-                        <FormItem>
-                            <FormLabel class="flex gap-1">Konfirmasi Password Baru<span class="text-red-500">*</span>
-                            </FormLabel>
-                            <FormControl>
-                                <Input type="password" placeholder="Konfirmasi Password Baru" v-bind="field" />
-                            </FormControl>
-                            <FormMessage>{{ errorMessage }}</FormMessage>
-                        </FormItem>
-                    </FormField>
-                </form>
             </DialogHeader>
+            <form @submit="onSubmit" class="w-full max-w-md space-y-6">
+                <FormField v-slot="{ field, errorMessage }" name="passwordLama">
+                    <FormItem>
+                        <FormLabel class="flex gap-1">Password Lama<span class="text-red-500">*</span></FormLabel>
+                        <FormControl>
+                            <Input type="password" placeholder="Password Lama" v-bind="field" />
+                        </FormControl>
+                        <FormMessage>{{ errorMessage }}</FormMessage>
+                    </FormItem>
+                </FormField>
+
+                <FormField v-slot="{ field, errorMessage }" name="passwordBaru">
+                    <FormItem>
+                        <FormLabel class="flex gap-1">Password Baru<span class="text-red-500">*</span></FormLabel>
+                        <FormControl>
+                            <Input type="password" placeholder="Password Baru" v-bind="field" />
+                        </FormControl>
+                        <FormMessage>{{ errorMessage }}</FormMessage>
+                    </FormItem>
+                </FormField>
+
+                <FormField v-slot="{ field, errorMessage }" name="passwordBaruKonfirmasi">
+                    <FormItem>
+                        <FormLabel class="flex gap-1">Konfirmasi Password Baru<span class="text-red-500">*</span>
+                        </FormLabel>
+                        <FormControl>
+                            <Input type="password" placeholder="Konfirmasi Password Baru" v-bind="field" />
+                        </FormControl>
+                        <FormMessage>{{ errorMessage }}</FormMessage>
+                    </FormItem>
+                </FormField>
+            </form>
             <DialogFooter>
                 <Button type="submit" @click="onSubmit">Update Stock</Button>
             </DialogFooter>

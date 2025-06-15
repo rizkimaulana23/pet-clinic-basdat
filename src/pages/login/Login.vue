@@ -28,11 +28,13 @@ const onSubmit = form.handleSubmit(async (values) => {
         await login({
             email: values.email,
             password: values.password
-        });
+        }).then((res) =>  {
+            if (res === false) throw new Error();
+        })
         toast.success('Login success. Redirecting to dashboard...');
         router.push("/dashboard")
     } catch (error: any) {
-        toast.error('Login failed. Check your credentials.')
+        toast.error('Login failed. Check your email and password again.')
     }
 })
 

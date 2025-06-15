@@ -15,7 +15,6 @@ import { FormField } from '../ui/form';
 import FormItem from '../ui/form/FormItem.vue';
 import FormControl from '../ui/form/FormControl.vue';
 import FormLabel from '../ui/form/FormLabel.vue';
-import Input from '../ui/input/Input.vue';
 import FormMessage from '../ui/form/FormMessage.vue';
 import { toast } from 'vue-sonner';
 import Select from '../ui/select/Select.vue';
@@ -23,20 +22,30 @@ import SelectTrigger from '../ui/select/SelectTrigger.vue';
 import SelectValue from '../ui/select/SelectValue.vue';
 import SelectContent from '../ui/select/SelectContent.vue';
 import SelectItem from '../ui/select/SelectItem.vue';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { getAllVaccines, type VaccineResponseDto } from '@/services/vaccines.services';
 
 const props = defineProps<{
-    idKunjungan: string,
-    idVaksin: string
+  idKunjungan: string,
+  idVaksin: string
 }>()
 
+const emits = defineEmits<{
+  'update': [data: {
+    idKunjungan: string,
+    idVaksin: string
+  }]
+}>();
+
+const isOpen = ref(false);
+
 const formSchema = toTypedSchema(z.object({
-    idKunjungan: z.string({
-        required_error: "Id Kunjungan tidak boleh kosong",
-    }),
-    idVaksin: z.string({
-        required_error: "Id Vaksin tidak boleh kosong"
-    })
+  idKunjungan: z.string({
+    required_error: "Id Kunjungan tidak boleh kosong",
+  }),
+  idVaksin: z.string({
+    required_error: "Id Vaksin tidak boleh kosong"
+  })
 }))
 
 const initialValues = computed(() => ({
@@ -49,7 +58,24 @@ const { handleSubmit, resetForm } = useForm({
   initialValues: initialValues.value
 })
 
-const onDialogOpenChange = (open: any) => {
+onMounted(async () => {
+  try {
+    listVaksin.value = await getAllVaccines();
+  } catch (error) {
+    console.error("Failed to prefetch vaccines");
+  }
+});
+
+const fetchVaccines = async () => {
+  try {
+    listVaksin.value = await getAllVaccines();
+  } catch (error) {
+    toast.error("Failed to fetch data");
+  }
+};
+
+const onDialogOpenChange = async (open: any) => {
+  isOpen.value = open;
   if (open) {
     resetForm({
       values: {
@@ -57,18 +83,26 @@ const onDialogOpenChange = (open: any) => {
         idVaksin: props.idVaksin
       }
     });
+
+    if (!listVaksin.value) {
+      fetchVaccines();
+    }
   }
 };
 
 const onSubmit = handleSubmit((values) => {
-    toast("Vaccination berhasil diperbarui", {
-        description: JSON.stringify(values, null, 2)
-    })
+  emits("update", {
+    idKunjungan: values.idKunjungan,
+    idVaksin: values.idVaksin
+  })
+  isOpen.value = false;
 })
+
+const listVaksin = ref<VaccineResponseDto[]>();
 </script>
 
 <template>
-  <Dialog  @update:open="onDialogOpenChange">
+  <Dialog :open="isOpen" @update:open="onDialogOpenChange">
     <DialogTrigger as-child>
       <Button variant="secondary">
         Update
@@ -77,38 +111,43 @@ const onSubmit = handleSubmit((values) => {
     <DialogContent>
       <DialogHeader>
         <DialogTitle class="mb-2">Update Vaccination</DialogTitle>
-        <form @submit.prevent="onSubmit" class="flex flex-col gap-4">
-            <FormField v-slot="{ componentField }" name="idKunjungan" :key="`kunjungan-${props.idKunjungan}`">
-                <FormItem>
-                    <FormLabel>Kunjungan</FormLabel>
-                    <FormControl>
-                        <Input type="string" placeholder="Id Kunjungan" v-bind="componentField" disabled/>
-                    </FormControl>
-                    <FormMessage />
-                </FormItem>
-            </FormField>
-
-            <FormField v-slot="{ componentField }" name="idVaksin" :key="`vaksin-${props.idVaksin}`">
-                <FormItem>
-                    <FormLabel>Vaksin</FormLabel>
-                    <Select v-bind="componentField">
-                        <FormControl>
-                            <SelectTrigger class="w-full">
-                                <SelectValue placeholder="Select Vaccine" />
-                            </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                            <SelectItem value="VAC001">Vaksin 1</SelectItem>
-                            <SelectItem value="VAC002">Vaksin 2</SelectItem>
-                            <SelectItem value="VAC003">Vaksin 3</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <FormMessage />
-                </FormItem>
-            </FormField>
-        </form>
-
       </DialogHeader>
+      <form @submit.prevent="onSubmit" class="flex flex-col gap-4">
+        <FormField v-slot="{ componentField }" name="idKunjungan">
+          <FormItem>
+            <FormLabel>Kunjungan</FormLabel>
+            <Select v-bind="componentField" disabled>
+              <FormControl>
+                <SelectTrigger class="w-full">
+                  <SelectValue placeholder="Select Kunjungan"></SelectValue>
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem :value="props.idKunjungan">{{ props.idKunjungan }}</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="idVaksin">
+          <FormItem>
+            <FormLabel>Vaksin</FormLabel>
+            <Select v-bind="componentField">
+              <FormControl>
+                <SelectTrigger class="w-full">
+                  <SelectValue placeholder="Select Vaksin "></SelectValue>
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem v-for="(item, index) in listVaksin" :value="item.kode" :key="index">{{ item.nama }} - [{{
+                  item.stok }}]</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </form>
       <DialogFooter>
         <Button type="submit" @click="onSubmit">Update Stock</Button>
       </DialogFooter>
