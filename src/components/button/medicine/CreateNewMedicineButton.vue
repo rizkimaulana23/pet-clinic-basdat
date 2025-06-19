@@ -72,7 +72,8 @@ const onSubmit = handleSubmit((values) => {
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Create New Medicine</DialogTitle>
-        <form @submit.prevent="onSubmit" class="space-y-4">
+      </DialogHeader>
+      <form @submit.prevent="onSubmit" class="space-y-4">
             <FormField v-slot="{ componentField }" name="nama">
                 <FormItem>
                     <FormLabel>Nama</FormLabel>
@@ -113,10 +114,8 @@ const onSubmit = handleSubmit((values) => {
                 </FormItem>
             </FormField>
         </form>
-
-      </DialogHeader>
       <DialogFooter>
-        <Button type="submit" @click="onSubmit">Update Stock</Button>
+        <Button type="submit" @click="onSubmit">Create Medicine</Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>

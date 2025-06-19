@@ -54,7 +54,7 @@ export const addMedicine = async (nama: string, harga: number, dosis: string, st
     try {
         const jumlahObat = await countAllMedicines();
 
-        const nextNumber = jumlahObat + 1;
+        const nextNumber = Number(jumlahObat) + 1;
         const paddedNumber = nextNumber.toString().padStart(3, '0');
         const vaccineCode = `MED${paddedNumber}`;
 

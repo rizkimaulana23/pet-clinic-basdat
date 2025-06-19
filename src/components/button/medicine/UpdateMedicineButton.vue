@@ -25,25 +25,25 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps<{
-    kode: string,
-    nama: string,
-    harga: number,
-    dosis: string
+  kode: string,
+  nama: string,
+  harga: number,
+  dosis: string
 }>()
 
 const formSchema = toTypedSchema(z.object({
-    kode: z.string({
-      required_error: "Kode Obat tidak boleh kosong"
-    }),
-    nama: z.string({
-        required_error: "Nama Obat tidak boleh kosong"
-    }),
-    harga: z.number({
-        required_error: "Harga Satuan Obat tidak boleh kosong"
-    }).min(1, "Harga satuan minimal Rp1"),
-    dosis: z.string({
-        required_error: "Dosis Obat tidak boleh kosong"
-    }),
+  kode: z.string({
+    required_error: "Kode Obat tidak boleh kosong"
+  }),
+  nama: z.string({
+    required_error: "Nama Obat tidak boleh kosong"
+  }),
+  harga: z.number({
+    required_error: "Harga Satuan Obat tidak boleh kosong"
+  }).min(1, "Harga satuan minimal Rp1"),
+  dosis: z.string({
+    required_error: "Dosis Obat tidak boleh kosong"
+  }),
 }))
 
 const { handleSubmit, resetForm } = useForm({
@@ -62,12 +62,12 @@ const handleOpenChange = (newState: boolean) => {
 };
 
 const onSubmit = handleSubmit((values) => {
-    toast("Medicine successfully updated", {
-        description: JSON.stringify(values, null, 2)
-    })
+  toast("Medicine successfully updated", {
+    description: JSON.stringify(values, null, 2)
+  })
 
-    emit('update', values.kode, values.nama, values.harga, values.dosis);
-    isOpen.value = false;
+  emit('update', values.kode, values.nama, values.harga, values.dosis);
+  isOpen.value = false;
 })
 </script>
 
@@ -81,52 +81,51 @@ const onSubmit = handleSubmit((values) => {
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Update Medicine</DialogTitle>
-        <form @submit.prevent="onSubmit" class="space-y-4">
-
-            <FormField v-slot="{ componentField }" name="kode">
-                <FormItem>
-                    <FormLabel>Kode</FormLabel>
-                    <FormControl>
-                        <Input type="text" placeholder="Kode" v-bind="componentField" readonly/>
-                    </FormControl>
-                    <FormMessage />
-                </FormItem>
-            </FormField>
-
-            <FormField v-slot="{ componentField }" name="nama">
-                <FormItem>
-                    <FormLabel>Nama</FormLabel>
-                    <FormControl>
-                        <Input type="text" placeholder="Nama" v-bind="componentField"/>
-                    </FormControl>
-                    <FormMessage />
-                </FormItem>
-            </FormField>
-
-            <FormField v-slot="{ componentField }" name="harga">
-                <FormItem>
-                    <FormLabel>Harga</FormLabel>
-                    <FormControl>
-                        <Input type="number" placeholder="Vaksin" v-bind="componentField"/>
-                    </FormControl>
-                    <FormMessage />
-                </FormItem>
-            </FormField>
-
-            <FormField v-slot="{ componentField }" name="dosis">
-                <FormItem>
-                    <FormLabel>Dosis</FormLabel>
-                    <FormControl>
-                        <Input type="text" placeholder="Dosis" v-bind="componentField"/>
-                    </FormControl>
-                    <FormMessage />
-                </FormItem>
-            </FormField>
-        </form>
-
       </DialogHeader>
+      <form @submit.prevent="onSubmit" class="space-y-4">
+
+        <FormField v-slot="{ componentField }" name="kode">
+          <FormItem>
+            <FormLabel>Kode</FormLabel>
+            <FormControl>
+              <Input type="text" placeholder="Kode" v-bind="componentField" readonly />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="nama">
+          <FormItem>
+            <FormLabel>Nama</FormLabel>
+            <FormControl>
+              <Input type="text" placeholder="Nama" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="harga">
+          <FormItem>
+            <FormLabel>Harga</FormLabel>
+            <FormControl>
+              <Input type="number" placeholder="Vaksin" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="dosis">
+          <FormItem>
+            <FormLabel>Dosis</FormLabel>
+            <FormControl>
+              <Input type="text" placeholder="Dosis" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </form>
       <DialogFooter>
-        <Button type="submit" @click="onSubmit">Update Stock</Button>
+        <Button type="submit" @click="onSubmit">Update Medicine</Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>

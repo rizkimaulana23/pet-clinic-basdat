@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DeleteVaccineButton from '@/components/button/DeleteVaccineButton.vue';
 import UpdateStockVaccineButton from '@/components/button/UpdateStockVaccineButton.vue';
+import UpdateVaccineButton from '@/components/button/UpdateVaccineButton.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
 import Table from '@/components/ui/table/Table.vue';
@@ -69,9 +70,7 @@ const searchData = async () => {
                     <TableCell class="text-center">{{ item.stok }}</TableCell>
                     <TableCell class="flex gap-1 justify-center">
                         <UpdateStockVaccineButton :nama="item.nama" :id="item.kode" @update="fetchData"/>
-                        <RouterLink :to="`/vaksin/${item.kode}/update`">
-                            <Button>Update</Button>
-                        </RouterLink>
+                        <UpdateVaccineButton :kode="item.kode" :nama="item.nama" :harga="item.harga" @update="fetchData"/>
                         <DeleteVaccineButton :nama-vaksin="item.nama" :kode-vaksin="item.kode" @fetch="fetchData"/>
                     </TableCell>
                 </TableRow>
